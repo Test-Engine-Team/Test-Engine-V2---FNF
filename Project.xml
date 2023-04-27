@@ -122,10 +122,8 @@
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
-	<!--haxelib name="newgrounds" unless="switch"/> -->
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="polymod"/>
-	<haxelib name="newgrounds"/>
 	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
 	
 	<!-- <haxelib name="flixel-animate" /> -->
@@ -189,17 +187,5 @@
 	<haxedef name="CAN_OPEN_LINKS" unless="switch"/>
 	<haxedef name="CAN_CHEAT" if="switch debug"/>
 	
-	<!-- <haxedef name="CLEAR_INPUT_SAVE"/> -->
-	
-	<section if="newgrounds">
-		<!-- Enables Ng.core.verbose -->
-		<!-- <haxedef name="NG_VERBOSE" /> -->
-		
-		<!-- Enables a NG debug session, so medals don't permently unlock -->
-		<!-- <haxedef name="NG_DEBUG" /> -->
-		
-		<!-- pretends that the saved session Id was expired, forcing the reconnect prompt -->
-		<!-- <haxedef name="NG_FORCE_EXPIRED_SESSION" if="debug" /> -->
-	</section>
-	
+	<!-- <haxedef name="CLEAR_INPUT_SAVE"/> -->	
 </project>
