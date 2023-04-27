@@ -131,7 +131,7 @@
 	<!-- https://github.com/ninjamuffin99/Flixel-Animate-Atlas-Player -->
 
 
-	<!--<haxelib name="discord_rpc" if="cpp"/> --> <!-- foesn't work with neko -->
+	<!--<haxelib name="discord_rpc" unless="neko" unless="web"/> -->
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
 	<!-- <haxelib name="markdown" /> -->
