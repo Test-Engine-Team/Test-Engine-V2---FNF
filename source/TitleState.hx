@@ -89,7 +89,7 @@ class TitleState extends MusicBeatState
 
 		super.create();
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('test-engine', 'testdevs');
 		PreferencesMenu.initPrefs();
 		PlayerSettings.init();
 		Highscore.load();
@@ -172,6 +172,8 @@ class TitleState extends MusicBeatState
 
 	function startIntro()
 	{
+		Main.fpsCounter.visible = PreferencesMenu.getPref('fps-counter');
+
 		if (!initialized)
 		{
 			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);

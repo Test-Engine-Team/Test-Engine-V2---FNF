@@ -30,12 +30,14 @@ class PreferencesMenu extends ui.OptionsState.Page
 
 		add(items = new TextMenuList());
 
+		createPrefItem('Ghost Tapping', 'gt', true);
 		createPrefItem('naughtyness', 'censor-naughty', true);
 		createPrefItem('downscroll', 'downscroll', false);
 		createPrefItem('flashing menu', 'flashing-menu', true);
 		createPrefItem('Camera Zooming on Beat', 'camera-zoom', true);
 		createPrefItem('FPS Counter', 'fps-counter', true);
 		createPrefItem('Auto Pause', 'auto-pause', false);
+		createPrefItem('OG ui', 'old', false);
 
 		camFollow = new FlxObject(FlxG.width / 2, 0, 140, 70);
 		if (items != null)
@@ -65,21 +67,18 @@ class PreferencesMenu extends ui.OptionsState.Page
 
 	public static function initPrefs():Void
 	{
+		if(FlxG.save.data.preferences != null)
+			preferences = FlxG.save.data.preferences;
+
+		preferenceCheck('gt', true);
 		preferenceCheck('censor-naughty', true);
 		preferenceCheck('downscroll', false);
 		preferenceCheck('flashing-menu', true);
 		preferenceCheck('camera-zoom', true);
 		preferenceCheck('fps-counter', true);
 		preferenceCheck('auto-pause', false);
+		preferenceCheck('old', false);
 		preferenceCheck('master-volume', 1);
-
-		#if muted
-		setPref('master-volume', 0);
-		FlxG.sound.muted = true;
-		#end
-
-		if (!getPref('fps-counter'))
-			FlxG.stage.removeChild(Main.fpsCounter);
 
 		FlxG.autoPause = getPref('auto-pause');
 	}
@@ -130,18 +129,16 @@ class PreferencesMenu extends ui.OptionsState.Page
 		checkboxes[items.selectedIndex].daValue = daSwap;
 		trace('toggled? ' + preferences.get(prefName));
 
+		FlxG.save.data.preferences = preferences;
+		FlxG.save.flush();
+
 		switch (prefName)
 		{
 			case 'fps-counter':
-				if (getPref('fps-counter'))
-					FlxG.stage.addChild(Main.fpsCounter);
-				else
-					FlxG.stage.removeChild(Main.fpsCounter);
+				Main.fpsCounter.visible = getPref('fps-counter');
 			case 'auto-pause':
 				FlxG.autoPause = getPref('auto-pause');
 		}
-
-		if (prefName == 'fps-counter') {}
 	}
 
 	override function update(elapsed:Float)
@@ -161,6 +158,9 @@ class PreferencesMenu extends ui.OptionsState.Page
 
 	private static function preferenceCheck(prefString:String, prefValue:Dynamic):Void
 	{
+		FlxG.save.data.preferences = preferences;
+		FlxG.save.flush();
+
 		if (preferences.get(prefString) == null)
 		{
 			preferences.set(prefString, prefValue);
