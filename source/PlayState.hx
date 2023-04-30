@@ -1832,13 +1832,18 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
+		if (now.getMonth() == 3 && now.getDate() == 1)
+			SONG.speed = FlxG.random.int(-1, 10);
+
 		#if debug
 		if (FlxG.keys.justPressed.TWO){
-			FlxG.sound.music.pitch -= 2;
+			FlxG.sound.music.pitch -= 0.2;
+			vocals.pitch -= 0.2;
 		}
 
 		if (FlxG.keys.justPressed.THREE){
-			FlxG.sound.music.pitch += 2;
+			FlxG.sound.music.pitch += 0.2;
+			vocals.pitch += 0.2;
 		}
 		#end
 

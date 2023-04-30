@@ -57,10 +57,43 @@ class CoolUtil
 	}
 
 	/*
-	* just lerp that does camLerpShit for u so u dont have to do it every time
-	*/
+	 * just lerp that does camLerpShit for u so u dont have to do it every time
+	 */
 	public static function coolLerp(a:Float, b:Float, ratio:Float):Float
 	{
 		return FlxMath.lerp(a, b, camLerpShit(ratio));
+	}
+
+	public static function loadMods()
+	{
+		#if sys
+		polymod.Polymod.init({
+			modRoot: "mods",
+			dirs: [openfl.Assets.getText('mods/ModEnabled.txt')],
+			errorCallback: (e) ->
+			{
+				trace(e.message);
+			},
+			frameworkParams: {
+				assetLibraryPaths: [
+					"songs" => "assets/songs",
+					"images" => "assets/images",
+					"shared" => "assets/shared",
+					"data" => "assets/data",
+					"fonts" => "assets/fonts",
+					"sounds" => "assets/sounds",
+					"music" => "assets/music",
+					"tutorial" => "assets/tutorial",
+					"week1" => "assets/week1",
+					"week2" => "assets/week2",
+					"week3" => "assets/week3",
+					"week4" => "assets/week4",
+					"week5" => "assets/week5",
+					"week6" => "assets/week6",
+					"week7" => "assets/week7",
+				]
+			}
+		});
+		#end
 	}
 }

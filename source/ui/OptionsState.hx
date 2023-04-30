@@ -1,5 +1,6 @@
 package ui;
 
+import sys.FileSystem;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -34,7 +35,10 @@ class OptionsState extends MusicBeatState
 		// var colors = addPage(Colors, new ColorsMenu());
 
 		#if cpp
-		var mods = addPage(Mods, new ModMenu());
+		var mods:Page = null;
+
+		if (FileSystem.exists('./mods'))
+			mods = addPage(Mods, new ModMenu());
 		#end
 
 		if (options.hasMultipleOptions())

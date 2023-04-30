@@ -1,157 +1,116 @@
 package ui;
 
-import flixel.FlxG;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-#if cpp
-import polymod.Polymod;
+import sys.io.File;
+import openfl.utils.Assets;
+import ui.OptionsState.Page;
+#if sys
 import sys.FileSystem;
 #end
+import flixel.FlxG;
+import flixel.group.FlxGroup.FlxTypedGroup;
 
-class ModMenu extends ui.OptionsState.Page
+class ModMenu extends Page
 {
-	var grpMods:FlxTypedGroup<ModMenuItem>;
-	var enabledMods:Array<String> = [];
-	var modFolders:Array<String> = [];
+	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
+	var menuItems:Array<String> = [];
 	var curSelected:Int = 0;
 
-	public function new():Void
+	public function new()
 	{
 		super();
 
-		grpMods = new FlxTypedGroup<ModMenuItem>();
-		add(grpMods);
+		#if sys
+		menuItems = FileSystem.readDirectory('./mods');
+		#end
 
-		refreshModList();
+		grpMenuShit = new FlxTypedGroup<Alphabet>();
+		add(grpMenuShit);
+
+		regenMenu();
+	}
+
+	private function regenMenu():Void
+	{
+		while (grpMenuShit.members.length > 0)
+		{
+			grpMenuShit.remove(grpMenuShit.members[0], true);
+		}
+
+		for (i in 0...menuItems.length)
+		{
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, menuItems[i], true, false);
+			songText.isMenuItem = true;
+			songText.targetY = i;
+			grpMenuShit.add(songText);
+		}
+
+		curSelected = 0;
+		changeSelection();
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.R)
-			refreshModList();
-
-		selections();
-
-		if (controls.UI_UP_P)
-			selections(-1);
-		if (controls.UI_DOWN_P)
-			selections(1);
-
-		if (FlxG.keys.justPressed.SPACE)
-			grpMods.members[curSelected].modEnabled = !grpMods.members[curSelected].modEnabled;
-
-		if (FlxG.keys.justPressed.I && curSelected != 0)
-		{
-			var oldOne = grpMods.members[curSelected - 1];
-			grpMods.members[curSelected - 1] = grpMods.members[curSelected];
-			grpMods.members[curSelected] = oldOne;
-			selections(-1);
-		}
-
-		if (FlxG.keys.justPressed.K && curSelected < grpMods.members.length - 1)
-		{
-			var oldOne = grpMods.members[curSelected + 1];
-			grpMods.members[curSelected + 1] = grpMods.members[curSelected];
-			grpMods.members[curSelected] = oldOne;
-			selections(1);
-		}
-
 		super.update(elapsed);
+
+		if (FlxG.keys.justPressed.R)
+		{
+			#if sys
+			menuItems = FileSystem.readDirectory('./mods');
+			regenMenu();
+			#end
+		}
+
+		var upP = controls.UI_UP_P;
+		var downP = controls.UI_DOWN_P;
+		var accepted = controls.ACCEPT;
+
+		if (upP)
+		{
+			changeSelection(-1);
+		}
+		if (downP)
+		{
+			changeSelection(1);
+		}
+
+		if (accepted)
+		{
+			var daSelected:String = menuItems[curSelected];
+
+			#if sys
+			File.saveContent('./mods/ModEnabled.txt', daSelected);
+			FlxG.switchState(new TitleState());
+			#end
+		}
 	}
 
-	private function selections(change:Int = 0):Void
+	function changeSelection(change:Int = 0):Void
 	{
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
 		curSelected += change;
 
-		if (curSelected >= modFolders.length)
-			curSelected = 0;
 		if (curSelected < 0)
-			curSelected = modFolders.length - 1;
+			curSelected = menuItems.length - 1;
+		if (curSelected >= menuItems.length)
+			curSelected = 0;
 
-		for (txt in 0...grpMods.length)
+		var bullShit:Int = 0;
+
+		for (item in grpMenuShit.members)
 		{
-			if (txt == curSelected)
+			item.targetY = bullShit - curSelected;
+			bullShit++;
+
+			item.alpha = 0.6;
+			// item.setGraphicSize(Std.int(item.width * 0.8));
+
+			if (item.targetY == 0)
 			{
-				grpMods.members[txt].color = FlxColor.YELLOW;
+				item.alpha = 1;
+				// item.setGraphicSize(Std.int(item.width));
 			}
-			else
-				grpMods.members[txt].color = FlxColor.WHITE;
 		}
-
-		organizeByY();
-	}
-
-	inline static var MOD_PATH = "./mods";
-	private function refreshModList():Void
-	{
-		while (grpMods.members.length > 0)
-		{
-			grpMods.remove(grpMods.members[0], true);
-		}
-
-		#if desktop
-		var modList = [];
-		modFolders = [];
-		
-		trace("mods path:" + FileSystem.absolutePath(MOD_PATH));
-		if (!FileSystem.exists(MOD_PATH))
-		{
-			FlxG.log.warn("missing mods folder, expected: " + FileSystem.absolutePath(MOD_PATH));
-			return;
-		}
-		
-		for (file in FileSystem.readDirectory(MOD_PATH))
-		{
-			if (FileSystem.isDirectory(MOD_PATH + file))
-				modFolders.push(file);
-		}
-
-		enabledMods = [];
-
-		modList = Polymod.scan(MOD_PATH);
-
-		trace(modList);
-
-		var loopNum:Int = 0;
-		for (i in modFolders)
-		{
-			var txt:ModMenuItem = new ModMenuItem(0, 10 + (40 * loopNum), 0, i, 32);
-			txt.text = i;
-			grpMods.add(txt);
-
-			loopNum++;
-		}
-		#end
-	}
-
-	private function organizeByY():Void
-	{
-		for (i in 0...grpMods.length)
-		{
-			grpMods.members[i].y = 10 + (40 * i);
-		}
-	}
-}
-
-class ModMenuItem extends FlxText
-{
-	public var modEnabled:Bool = false;
-	public var daMod:String;
-
-	public function new(x:Float, y:Float, w:Float, str:String, size:Int)
-	{
-		super(x, y, w, str, size);
-	}
-
-	override function update(elapsed:Float)
-	{
-		if (modEnabled)
-			alpha = 1;
-		else
-			alpha = 0.5;
-
-		super.update(elapsed);
 	}
 }
