@@ -62,11 +62,16 @@ class FreeplayState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
+		if (openfl.Assets.exists('assets/data/freeplaySongList.json')){
 		songFreeplayShit = Json.parse(Assets.getText('assets/data/freeplaySongList.json'));
 
 		for (stuff in songFreeplayShit.songs)
 		{
-			addSong(stuff.song, stuff.week, stuff.icon, FlxColor.fromString(stuff.color));
+			if (stuff.song != null)
+				addSong(stuff.song, stuff.week, stuff.icon, FlxColor.fromString(stuff.color));
+		}
+		}else{
+			songFreeplayShit.addBaseSongs = true;
 		}
 
 		if (songFreeplayShit.addBaseSongs)

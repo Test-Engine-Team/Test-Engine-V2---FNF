@@ -1,10 +1,12 @@
 package ui;
 
-import sys.io.File;
-import openfl.utils.Assets;
+import openfl.display.BitmapData;
+import flixel.FlxSprite;
+import openfl.Assets;
 import ui.OptionsState.Page;
 #if sys
 import sys.FileSystem;
+import sys.io.File;
 #end
 import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -12,6 +14,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 class ModMenu extends Page
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
+	var grpIconShit:FlxTypedGroup<FlxSprite>;
 
 	var menuItems:Array<String> = [];
 	var curSelected:Int = 0;
@@ -22,10 +25,17 @@ class ModMenu extends Page
 
 		#if sys
 		menuItems = FileSystem.readDirectory('./mods');
+
+		menuItems.remove('ModEnabled.txt');
+		menuItems.remove('Global');
+		menuItems.push('Base Game');
 		#end
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
+
+		grpIconShit = new FlxTypedGroup<FlxSprite>();
+		add(grpIconShit);
 
 		regenMenu();
 	}
@@ -39,10 +49,28 @@ class ModMenu extends Page
 
 		for (i in 0...menuItems.length)
 		{
+			#if sys
 			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, menuItems[i], true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpMenuShit.add(songText);
+
+			/*var icon:FlxSprite = new FlxSprite(songText.x, songText.y);
+
+			if (Assets.exists(Sys.getCwd() + "mods/" + menuItems[i] + "/_polymod_icon.png"))
+			{
+				var imageDataRaw = File.getBytes(Sys.getCwd() + "mods/" + menuItems[i] + "/_polymod_icon.png");
+				var graphicData = BitmapData.fromBytes(imageDataRaw);
+
+				icon.loadGraphic(graphicData, false, 0, 0, false, menuItems[i]);
+			}
+			else {
+				trace(Paths.image('modtemp'));
+				icon.loadGraphic(Paths.image('modtemp'), false, 0, 0, false, menuItems[i]);
+			}
+
+			grpIconShit.add(icon);*/
+			#end
 		}
 
 		curSelected = 0;
@@ -57,6 +85,9 @@ class ModMenu extends Page
 		{
 			#if sys
 			menuItems = FileSystem.readDirectory('./mods');
+			menuItems.remove('ModEnabled.txt');
+			menuItems.remove('Global');
+			menuItems.push('Base Game');
 			regenMenu();
 			#end
 		}
@@ -101,15 +132,21 @@ class ModMenu extends Page
 		for (item in grpMenuShit.members)
 		{
 			item.targetY = bullShit - curSelected;
+			for (icon in grpIconShit.members)
+				icon.y = item.targetY;
+
 			bullShit++;
 
 			item.alpha = 0.6;
+			for (icon in grpIconShit.members)
+				icon.alpha = 0.6;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
 			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
+				for (icon in grpIconShit.members)
+					icon.alpha = 1;
 			}
 		}
 	}

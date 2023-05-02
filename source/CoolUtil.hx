@@ -69,7 +69,7 @@ class CoolUtil
 		#if sys
 		polymod.Polymod.init({
 			modRoot: "mods",
-			dirs: [openfl.Assets.getText('mods/ModEnabled.txt')],
+			dirs: [openfl.Assets.getText('mods/ModEnabled.txt'), 'Global'],
 			errorCallback: (e) ->
 			{
 				trace(e.message);
@@ -77,6 +77,7 @@ class CoolUtil
 			frameworkParams: {
 				assetLibraryPaths: [
 					"songs" => "assets/songs",
+					"characters" => "assets/characters",
 					"images" => "assets/images",
 					"shared" => "assets/shared",
 					"data" => "assets/data",

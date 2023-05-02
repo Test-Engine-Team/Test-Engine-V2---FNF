@@ -1,14 +1,32 @@
 package;
 
-import Section.SwagSection;
+import cpp.abi.Abi;
+import haxe.Json;
+import openfl.Assets;
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxSort;
-import haxe.io.Path;
 
 using StringTools;
+
+typedef CharAnimLoadingShit =
+{
+	var animName:String;
+	var anim:String;
+}
+
+typedef CharMainShit =
+{
+	var anims:Array<CharAnimLoadingShit>;
+	var hasWinningIcon:Bool;
+	var gfDance:Bool;
+	var hpColor:String;
+	var image:String;
+	var x:Float;
+	var y:Float;
+}
 
 class Character extends FlxSprite
 {
@@ -21,6 +39,10 @@ class Character extends FlxSprite
 	public var holdTimer:Float = 0;
 
 	public var animationNotes:Array<Dynamic> = [];
+
+	public var hpColor:FlxColor = FlxColor.GRAY;
+	public var xs:Float = 0;
+	public var ys:Float = 0;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -381,11 +403,6 @@ class Character extends FlxSprite
 			case 'senpai':
 				frames = Paths.getSparrowAtlas('characters/senpai');
 				quickAnimAdd('idle', 'Senpai Idle');
-				// at framerate 16.8 animation plays over 2 beats at 144bpm,
-				// but if the game lags or the bpm is > 144 (mods etc.)
-				// he may miss his next dance
-				// animation.getByName('idle').frameRate = 16.8;
-
 				quickAnimAdd('singUP', 'SENPAI UP NOTE');
 				quickAnimAdd('singLEFT', 'SENPAI LEFT NOTE');
 				quickAnimAdd('singRIGHT', 'SENPAI RIGHT NOTE');
@@ -475,10 +492,6 @@ class Character extends FlxSprite
 				quickAnimAdd('singDOWN', 'Tankman DOWN note ');
 				quickAnimAdd('singUPmiss', 'Tankman UP note MISS');
 				quickAnimAdd('singDOWNmiss', 'Tankman DOWN note MISS');
-
-				// PRETTY GOOD tankman
-				// TANKMAN UGH instanc
-
 				quickAnimAdd('singDOWN-alt', 'PRETTY GOOD');
 				quickAnimAdd('singUP-alt', 'TANKMAN UGH');
 
@@ -487,6 +500,32 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+			default:
+				if (Assets.exists('assets/characters/$curCharacter.json')){
+					var shit:CharMainShit = Json.parse(Assets.getText('assets/characters/$curCharacter.json'));
+					xs = shit.x;
+					ys = shit.y;
+
+					frames = Paths.getSparrowAtlas('characters/${shit.image}');
+
+					for (anims in shit.anims){
+						quickAnimAdd(anims.animName, anims.anim);
+					}
+
+					loadOffsetFile(curCharacter);
+				}else{
+				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST');
+				frames = tex;
+				quickAnimAdd('idle', 'Dad idle dance');
+				quickAnimAdd('singUP', 'Dad Sing Note UP');
+				quickAnimAdd('singRIGHT', 'Dad Sing Note RIGHT');
+				quickAnimAdd('singDOWN', 'Dad Sing Note DOWN');
+				quickAnimAdd('singLEFT', 'Dad Sing Note LEFT');
+
+				loadOffsetFile('dad');
+
+				playAnim('idle');
+				}
 		}
 
 		dance();

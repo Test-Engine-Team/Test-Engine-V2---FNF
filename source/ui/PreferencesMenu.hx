@@ -35,6 +35,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		createPrefItem('downscroll', 'downscroll', false);
 		createPrefItem('flashing menu', 'flashing-menu', true);
 		createPrefItem('Camera Zooming on Beat', 'camera-zoom', true);
+		createPrefItem('Botplay', 'bot', false);
 		createPrefItem('FPS Counter', 'fps-counter', true);
 		createPrefItem('Auto Pause', 'auto-pause', false);
 		createPrefItem('OG ui', 'old', false);
@@ -75,6 +76,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		preferenceCheck('downscroll', false);
 		preferenceCheck('flashing-menu', true);
 		preferenceCheck('camera-zoom', true);
+		preferenceCheck('bot', false);
 		preferenceCheck('fps-counter', true);
 		preferenceCheck('auto-pause', false);
 		preferenceCheck('old', false);

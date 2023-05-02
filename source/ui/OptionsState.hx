@@ -35,10 +35,7 @@ class OptionsState extends MusicBeatState
 		// var colors = addPage(Colors, new ColorsMenu());
 
 		#if cpp
-		var mods:Page = null;
-
-		if (FileSystem.exists('./mods'))
-			mods = addPage(Mods, new ModMenu());
+		var mods = addPage(Mods, new ModMenu());
 		#end
 
 		if (options.hasMultipleOptions())

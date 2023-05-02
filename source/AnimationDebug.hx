@@ -19,8 +19,6 @@ using StringTools;
  */
 class AnimationDebug extends FlxState
 {
-	var bf:Boyfriend;
-	var dad:Character;
 	var char:Character;
 	var textAnim:FlxText;
 	var dumbTexts:FlxTypedGroup<FlxText>;
@@ -44,28 +42,40 @@ class AnimationDebug extends FlxState
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
-		if (daAnim == 'bf')
+		if (daAnim.contains('bf'))
 			isDad = false;
 
 		if (isDad)
 		{
-			dad = new Character(0, 0, daAnim);
+			var dadS = new Character(0, 0, daAnim);
+			dadS.screenCenter();
+			dadS.debugMode = true;
+			dadS.alpha = 0.4;
+			dadS.color = FlxColor.BLACK;
+			add(dadS);
+
+			var dad = new Character(0, 0, daAnim);
 			dad.screenCenter();
 			dad.debugMode = true;
 			add(dad);
 
 			char = dad;
-			dad.flipX = false;
 		}
 		else
 		{
-			bf = new Boyfriend(0, 0);
+			var bfS = new Boyfriend(0, 0);
+			bfS.screenCenter();
+			bfS.debugMode = true;
+			bfS.alpha = 0.4;
+			bfS.color = FlxColor.BLACK;
+			add(bfS);
+
+			var bf = new Boyfriend(0, 0);
 			bf.screenCenter();
 			bf.debugMode = true;
 			add(bf);
 
 			char = bf;
-			bf.flipX = false;
 		}
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
