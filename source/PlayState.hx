@@ -149,9 +149,10 @@ class PlayState extends MusicBeatState
 
 	var inCutscene:Bool = false;
 
+	var storyDifficultyText:String = "";
+
 	#if discord_rpc
 	// Discord RPC variables
-	var storyDifficultyText:String = "";
 	var iconRPC:String = "";
 	var songLength:Float = 0;
 	var detailsText:String = "";
@@ -1274,7 +1275,7 @@ class PlayState extends MusicBeatState
 	function initDiscord():Void
 	{
 		#if discord_rpc
-		storyDifficultyText = difficultyString(storyDifficulty).toUpperCase();
+		storyDifficultyText = CoolUtil.difficultyString().toUpperCase();
 		iconRPC = SONG.player2;
 
 		// To avoid having duplicate images in Discord assets
@@ -2228,7 +2229,7 @@ class PlayState extends MusicBeatState
 		vocals.volume = 0;
 		if (SONG.validScore)
 		{
-			Highscore.saveScore(SONG.song, songScore, storyDifficulty);
+			Highscore.saveScore(SONG.song, songScore, storyDifficultyText);
 		}
 
 		if (isStoryMode)
@@ -2257,7 +2258,7 @@ class PlayState extends MusicBeatState
 
 				if (SONG.validScore)
 				{
-					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
+					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficultyText);
 				}
 
 				FlxG.save.data.weekUnlocked = StoryMenuState.weekUnlocked;
@@ -2723,6 +2724,9 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
+				/*if (!PreferencesMenu.getPref('old'))
+					FlxTween.tween(scoreTxt.scale, {x: 1.09, y:1.09}, 0.1, {ease: FlxEase.quadOut, type: PINGPONG});*/
+
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
@@ -2982,23 +2986,6 @@ class PlayState extends MusicBeatState
 		{
 			lightningStrikeShit();
 		}
-	}
-
-	function difficultyString(diff:Int):String
-	{
-		var diffTranslate:String = 'sus';
-
-		switch diff
-		{
-			case 0:
-				diffTranslate = 'easy';
-			case 1:
-				diffTranslate = 'normal';
-			case 2:
-				diffTranslate = 'hard';
-		}
-
-		return diffTranslate;
 	}
 
 	var curLight:Int = 0;
