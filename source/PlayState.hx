@@ -1867,11 +1867,12 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		var healthConversion = Math.round(health * 50);
 		if (!PreferencesMenu.getPref('old'))
 		{
 			scoreTxt.screenCenter(X);
 			scoreTxt.updateHitbox();
-			scoreTxt.text = "Score:" + songScore + " Misses:" + songMisses + " Combo:" + combo;
+			scoreTxt.text = "Score: " + songScore + " Misses: " + songMisses + " Combo: " + combo + " Health: " + healthConversion + "%";
 		}
 		else
 			scoreTxt.text = "Score:" + songScore;
