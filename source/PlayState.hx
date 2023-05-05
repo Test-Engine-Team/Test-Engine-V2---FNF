@@ -224,6 +224,17 @@ class PlayState extends MusicBeatState
 		initDiscord();
 		#end
 
+		if (StoryMenuState.funniWeekSix)
+		{
+			if (20 > FlxG.drawFramerate) {
+				FlxG.updateFramerate = 20;
+				FlxG.drawFramerate = 20;
+			} else {
+				FlxG.drawFramerate = 20;
+				FlxG.updateFramerate = 20;
+			}
+		}
+
 		switch (SONG.song.toLowerCase())
 		{
 			case 'spookeez' | 'monster' | 'south':
@@ -461,6 +472,18 @@ class PlayState extends MusicBeatState
 				bgGirls.setGraphicSize(Std.int(bgGirls.width * daPixelZoom));
 				bgGirls.updateHitbox();
 				add(bgGirls);
+
+				if (StoryMenuState.funniWeekSix)
+				{
+					bgGirls.antialiasing = false;
+					bgSchool.antialiasing = false;
+					bgStreet.antialiasing = false;
+					bgTrees.antialiasing = false;
+					fgTrees.antialiasing = false;
+					treeLeaves.antialiasing = false;
+					bgSky.antialiasing = false;
+					trace('we had to disable antialiasing for budget cuts :(');
+				}
 			case 'thorns':
 				curStage = 'schoolEvil';
 
@@ -477,6 +500,12 @@ class PlayState extends MusicBeatState
 				bg.scrollFactor.set(0.8, 0.9);
 				bg.scale.set(6, 6);
 				add(bg);
+
+				if (StoryMenuState.funniWeekSix)
+				{
+					bg.antialiasing = false;
+					trace('we had to disable antialiasing for budget cuts :(');
+				}
 
 			/* 
 				var bg:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.image('weeb/evilSchoolBG'));
@@ -521,6 +550,8 @@ class PlayState extends MusicBeatState
 				add(waveSprite);
 				add(waveSpriteFG);
 			 */
+
+			// var bg:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.image('weeb/evilSchoolBG'));trace('we had to disable antialiasing for budget cuts :(');
 
 			case 'guns' | 'stress' | 'ugh':
 				defaultCamZoom = 0.90;
@@ -2242,6 +2273,18 @@ class PlayState extends MusicBeatState
 			if (storyPlaylist.length <= 0)
 			{
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+
+				#if desktop
+				if (60 > FlxG.drawFramerate) {
+					FlxG.updateFramerate = 60;
+					FlxG.drawFramerate = 60;
+				} else {
+					FlxG.drawFramerate = 60;
+					FlxG.updateFramerate = 60;
+				}
+				#end
+
+				StoryMenuState.funniWeekSix = false;
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
