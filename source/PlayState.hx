@@ -918,7 +918,7 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
-		if (isStoryMode && !seenCutscene)
+		if ((isStoryMode || PreferencesMenu.getPref('freeplay-cutscenes')) && !seenCutscene)
 		{
 			seenCutscene = true;
 
@@ -2227,7 +2227,6 @@ class PlayState extends MusicBeatState
 		if (combo != 0)
 		{
 			combo = 0;
-			displayCombo();
 		}
 	}
 
