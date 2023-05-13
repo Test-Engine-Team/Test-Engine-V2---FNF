@@ -22,6 +22,8 @@ class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
 
+	public static var funniWeekSix:Bool = false;
+
 	var weekData:Array<Dynamic> = [
 		['Tutorial'],
 		['Bopeebo', 'Fresh', 'Dadbattle'],
@@ -74,12 +76,16 @@ class StoryMenuState extends MusicBeatState
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
 
+	static var unlockedSecretWeek:Bool = false;
+
 	override function create()
 	{
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		if (PlayState.now.getMonth() == 3 && PlayState.now.getDate() == 1){
+		if (PlayState.now.getMonth() == 3 && PlayState.now.getDate() == 1) unlockedSecretWeek = true;
+
+		if (unlockedSecretWeek) {
 			weekData = [
 				['Tutorial'],
 				['Bopeebo', 'Fresh', 'Dadbattle'],
@@ -312,6 +318,14 @@ class StoryMenuState extends MusicBeatState
 					changeDifficulty(1);
 				if (controls.UI_LEFT_P)
 					changeDifficulty(-1);
+
+				#if debug
+				if (FlxG.keys.justPressed.P)
+				{
+					funniWeekSix = true;
+					unlockedSecretWeek = true;
+				}
+				#end
 			}
 
 			if (controls.ACCEPT)
@@ -346,6 +360,16 @@ class StoryMenuState extends MusicBeatState
 				grpWeekCharacters.members[1].animation.play('bfConfirm');
 				stopspamming = true;
 			}
+
+			#if desktop
+			#if !debug
+			//make a toggle true in a 1 / 1000 chance
+			if (Math.random() < 0.001 && curWeek == 6)
+			{
+				funniWeekSix = true;
+			}
+			#end
+			#end
 
 			PlayState.storyPlaylist = weekData[curWeek];
 			PlayState.isStoryMode = true;

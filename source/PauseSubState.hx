@@ -168,6 +168,16 @@ class PauseSubState extends MusicBeatSubstate
 				case "Restart Song":
 					FlxG.resetState();
 				case "Exit to menu":
+					if (StoryMenuState.funniWeekSix) {
+						if (60 > FlxG.drawFramerate) {
+							FlxG.updateFramerate = 60;
+							FlxG.drawFramerate = 60;
+						} else {
+							FlxG.drawFramerate = 60;
+							FlxG.updateFramerate = 60;
+						}
+					}
+					StoryMenuState.funniWeekSix = false;
 					PlayState.seenCutscene = false;
 					PlayState.deathCounter = 0;
 					if (PlayState.isStoryMode)

@@ -33,12 +33,13 @@ class PreferencesMenu extends ui.OptionsState.Page
 		createPrefItem('Ghost Tapping', 'gt', true);
 		createPrefItem('naughtyness', 'censor-naughty', true);
 		createPrefItem('downscroll', 'downscroll', false);
-		createPrefItem('flashing menu', 'flashing-menu', true);
+		createPrefItem('Flashing Lights', 'flashing-menu', true);
+		createPrefItem('Freeplay Cutscenes', 'freeplay-cutscenes', false);
 		createPrefItem('Camera Zooming on Beat', 'camera-zoom', true);
 		createPrefItem('Botplay', 'bot', false);
 		createPrefItem('FPS Counter', 'fps-counter', true);
 		createPrefItem('Auto Pause', 'auto-pause', false);
-		createPrefItem('OG ui', 'old', false);
+		createPrefItem('OG UI', 'old', false);
 
 		camFollow = new FlxObject(FlxG.width / 2, 0, 140, 70);
 		if (items != null)
@@ -75,6 +76,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		preferenceCheck('censor-naughty', true);
 		preferenceCheck('downscroll', false);
 		preferenceCheck('flashing-menu', true);
+		preferenceCheck('freeplay-cutscenes', false);
 		preferenceCheck('camera-zoom', true);
 		preferenceCheck('bot', false);
 		preferenceCheck('fps-counter', true);
