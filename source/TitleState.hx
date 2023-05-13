@@ -1,5 +1,6 @@
 package;
 
+import ui.ModifierMenu;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxSprite;
@@ -88,6 +89,7 @@ class TitleState extends MusicBeatState
 
 		FlxG.save.bind('test-engine', 'testdevs');
 		PreferencesMenu.initPrefs();
+		ModifierMenu.initPrefs();
 		PlayerSettings.init();
 		Highscore.load();
 

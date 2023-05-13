@@ -1,3 +1,9 @@
 {
-	"addBaseSongs": true
+	"addBaseSongs": true,
+
+	"songs": [{
+		"song": "test",
+		"diffs": "normal",
+		"icon": "bf-pixel"
+	}]
 }

@@ -1,25 +1,17 @@
 package;
 
+import openfl.Assets;
+import ui.ModifierMenu;
 import Section.SwagSection;
 import Song.SwagSong;
-import WiggleEffect.WiggleEffectType;
-import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.FlxSubState;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.effects.FlxTrail;
-import flixel.addons.effects.FlxTrailArea;
-import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxMath;
@@ -30,19 +22,9 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
-import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
-import haxe.Json;
-import lime.utils.Assets;
-import openfl.Lib;
-import openfl.display.BitmapData;
-import openfl.display.BlendMode;
-import openfl.display.StageQuality;
-import openfl.filters.ShaderFilter;
-import shaderslmfao.BuildingShaders.BuildingShader;
 import shaderslmfao.BuildingShaders;
 import shaderslmfao.ColorSwap;
 import ui.PreferencesMenu;
@@ -136,6 +118,7 @@ class PlayState extends MusicBeatState
 	var talking:Bool = true;
 	var songScore:Int = 0;
 	var songMisses:Int = 0;
+	var songAccuracy:Float = 0;
 	var scoreTxt:FlxText;
 
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
@@ -596,6 +579,11 @@ class PlayState extends MusicBeatState
 				foregroundSprites.add(fgTank3);
 
 			default:
+				if (Assets.exists('assets/stages/${SONG.stage}.json')){
+					var stage = new BGhandler(SONG.stage);
+					defaultCamZoom = stage.zoom;
+					add(stage);
+				}else{
 				defaultCamZoom = 0.9;
 				curStage = 'stage';
 
@@ -619,6 +607,7 @@ class PlayState extends MusicBeatState
 
 				add(stageCurtains);
 		}
+	}
 
 		var gfVersion:String = 'gf';
 
@@ -1787,16 +1776,23 @@ class PlayState extends MusicBeatState
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
 
+	var randomAssColors:Array<FlxColor> = [FlxColor.PURPLE, FlxColor.RED, FlxColor.BLUE, FlxColor.ORANGE, FlxColor.GREEN];
+
 	override public function update(elapsed:Float)
 	{
-		// makes the lerp non-dependant on the framerate
-		// FlxG.camera.followLerp = CoolUtil.camLerpShit(0.04);
+		if (ModifierMenu.getPref('drug'))
+		{
+			FlxG.sound.music.pitch = FlxG.random.float(0.2, 1.8);
+			vocals.pitch = FlxG.random.float(0.2, 1.8);
+			camHUD.bgColor = FlxG.random.getObject(randomAssColors);
+			camHUD.alpha = FlxG.random.float(0.4, 1);
+			SONG.speed = FlxG.random.float(-1.4, 10);
+		}
 
 		#if !debug
 		perfectMode = false;
 		#end
 
-		// do this BEFORE super.update() so songPosition is accurate
 		if (startingSong)
 		{
 			if (startedCountdown)
@@ -2151,6 +2147,8 @@ class PlayState extends MusicBeatState
 					if (SONG.needsVoices)
 						vocals.volume = 1;
 
+					if (ModifierMenu.getPref('hpd'))
+						health -= 0.02;
 					daNote.kill();
 					notes.remove(daNote, true);
 					daNote.destroy();
@@ -2725,7 +2723,7 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				/*if (!PreferencesMenu.getPref('old'))
-					FlxTween.tween(scoreTxt.scale, {x: 1.09, y:1.09}, 0.1, {ease: FlxEase.quadOut, type: PINGPONG});*/
+					FlxTween.tween(scoreTxt.scale, {x: 1.09, y:1.09}, 0.1, {ease: FlxEase.quadOut, type: PINGPONG}); */
 
 				note.kill();
 				notes.remove(note, true);
