@@ -1852,7 +1852,7 @@ class PlayState extends MusicBeatState
 				rank = "A";
 			else if (songAccuracy >= 70)
 				rank = "B";
-			else if (songAccuracy >= 50)
+			else if (songAccuracy >= 60)
 				rank = "C";
 			else
 				rank = "D";
@@ -2350,7 +2350,7 @@ class PlayState extends MusicBeatState
 						campaignRank = "A";
 					else if (campaignAccuracy >= 70)
 						campaignRank = "B";
-					else if (campaignAccuracy >= 50)
+					else if (campaignAccuracy >= 60)
 						campaignRank = "C";
 					else
 						campaignRank = "D";
