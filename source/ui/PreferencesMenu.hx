@@ -40,6 +40,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		createPrefItem('FPS Counter', 'fps-counter', true);
 		createPrefItem('Auto Pause', 'auto-pause', false);
 		createPrefItem('OG UI', 'old', false);
+		createPrefItem('Skip Results Screen', 'skip-results', false);
 
 		camFollow = new FlxObject(FlxG.width / 2, 0, 140, 70);
 		if (items != null)
@@ -82,6 +83,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		preferenceCheck('fps-counter', true);
 		preferenceCheck('auto-pause', false);
 		preferenceCheck('old', false);
+		preferenceCheck('skip-results', false);
 		preferenceCheck('master-volume', 1);
 
 		FlxG.autoPause = getPref('auto-pause');

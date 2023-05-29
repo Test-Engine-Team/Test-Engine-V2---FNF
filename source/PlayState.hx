@@ -28,6 +28,7 @@ import flixel.util.FlxTimer;
 import shaderslmfao.BuildingShaders;
 import shaderslmfao.ColorSwap;
 import ui.PreferencesMenu;
+import ResultsState;
 
 using StringTools;
 
@@ -42,6 +43,7 @@ class PlayState extends MusicBeatState
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
+	public var storyPlaylistAccuracies:Array<Int> = [];
 	public static var storyDifficulty:Int = 1;
 	public static var deathCounter:Int = 0;
 	public static var practiceMode:Bool = false;
@@ -73,6 +75,7 @@ class PlayState extends MusicBeatState
 	private var gfSpeed:Int = 1;
 	private var health:Float = 1;
 	private var combo:Int = 0;
+	private var highestCombo:Int = 0;
 
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
@@ -116,14 +119,23 @@ class PlayState extends MusicBeatState
 	var tankGround:BGSprite;
 
 	var talking:Bool = true;
-	var songScore:Int = 0;
-	var songMisses:Int = 0;
-	var songAccuracy:Float = 0;
+	public var songScore:Int = 0;
+	public var songMisses:Int = 0;
+	public var songAccuracy:Float = 0;
+	public var rank:String = 'N/A';
 	var scoreTxt:FlxText;
+
+	public var notesHit:Int = 0;
+	public var notesThatHitTheStrum:Int = 0;
+	public var coolNoteFloat:Float = 0.0;
 
 	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
 	public static var campaignScore:Int = 0;
+	public static var campaignAccuracy:Int = 100;
+	public static var campaignMisses:Int = 0;
+	public static var campaignNotesHit:Int = 0;
+	public static var campaignHighestCombo:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
 
@@ -873,8 +885,10 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		if (storyWeek == 6)
+		if (storyWeek == 6) {
 			scoreTxt.font = 'assets/fonts/pixel.otf';
+			scoreTxt.scale.set(0.8, 0.8);
+		}
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
@@ -1824,6 +1838,28 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
+		if (combo > highestCombo)
+			highestCombo = combo;
+
+		// ranking stuff
+		if (notesThatHitTheStrum >= 1)
+		{
+			if (songAccuracy == 100)
+				rank = 'S+';
+			else if (songAccuracy >= 95)
+				rank = 'S';
+			else if (songAccuracy >= 90)
+				rank = "A";
+			else if (songAccuracy >= 70)
+				rank = "B";
+			else if (songAccuracy >= 50)
+				rank = "C";
+			else
+				rank = "D";
+		}
+		else
+			rank = "N/A";
+
 		if (startingSong)
 		{
 			if (startedCountdown)
@@ -1899,7 +1935,7 @@ class PlayState extends MusicBeatState
 		{
 			scoreTxt.screenCenter(X);
 			scoreTxt.updateHitbox();
-			scoreTxt.text = "Score: " + songScore + " Misses: " + songMisses + " Combo: " + combo + " Health: " + healthConversion + "%";
+			scoreTxt.text = "| Score: " + songScore + " | Misses: " + songMisses + " | Accuracy: " + songAccuracy + "% [" + rank + "] | Combo: " + combo + "  | Health: " + healthConversion + "% | ";
 		}
 		else
 			scoreTxt.text = "Score:" + songScore;
@@ -1938,6 +1974,9 @@ class PlayState extends MusicBeatState
 			DiscordClient.changePresence("Chart Editor", null, null, true);
 			#end
 		}
+
+		if (FlxG.keys.justPressed.SPACE && boyfriend.animOffsets.exists('hey'))
+			boyfriend.playAnim('hey');
 
 		if (FlxG.keys.justPressed.NINE)
 			iconP1.swapOldIcon();
@@ -2264,8 +2303,13 @@ class PlayState extends MusicBeatState
 		if (isStoryMode)
 		{
 			campaignScore += songScore;
+			campaignMisses += songMisses;
+			campaignNotesHit += notesHit;
+			if (highestCombo > campaignHighestCombo)
+				campaignHighestCombo = highestCombo;
 
 			storyPlaylist.remove(storyPlaylist[0]);
+			storyPlaylistAccuracies.push(Std.int(songAccuracy));
 
 			if (storyPlaylist.length <= 0)
 			{
@@ -2286,13 +2330,44 @@ class PlayState extends MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
-				switch (PlayState.storyWeek)
+				if (!PreferencesMenu.getPref('skip-results'))
 				{
-					case 7:
-						FlxG.switchState(new VideoState());
-					default:
-						FlxG.switchState(new StoryMenuState());
+					// using the storyPlaylistAccuracy calculate an average accuracy from the array
+					var totalAccuracy:Float = 0;
+					for (i in 0...storyPlaylistAccuracies.length)
+					{
+						totalAccuracy += storyPlaylistAccuracies[i];
+					}
+					totalAccuracy /= storyPlaylistAccuracies.length;
+					campaignAccuracy = Std.int(totalAccuracy);
+
+					var campaignRank:String = "N/A";
+					if (campaignAccuracy == 100)
+						campaignRank = 'S+';
+					else if (campaignAccuracy >= 95)
+						campaignRank = 'S';
+					else if (campaignAccuracy >= 90)
+						campaignRank = "A";
+					else if (campaignAccuracy >= 70)
+						campaignRank = "B";
+					else if (campaignAccuracy >= 50)
+						campaignRank = "C";
+					else
+						campaignRank = "D";
+
+					ResultsState.weekNum = storyWeek;
+					ResultsState.difficulty = storyDifficultyText;
+					ResultsState.isStoryMode = true;
+					ResultsState.accuracy = campaignAccuracy;
+					ResultsState.score = campaignScore;
+					ResultsState.notesHit = campaignNotesHit;
+					ResultsState.rank = campaignRank;
+
+					trace('WENT TO RESULTS STATE??');
+					FlxG.switchState(new ResultsState());
 				}
+				else
+					FlxG.switchState(new StoryMenuState());
 
 				// if ()
 				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
@@ -2351,9 +2426,24 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			trace('WENT BACK TO FREEPLAY??');
-			// unloadAssets();
-			FlxG.switchState(new FreeplayState());
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			if (!PreferencesMenu.getPref('bot'))
+			{
+				trace('WENT TO RESULTS STATE??');
+				ResultsState.songName = SONG.song;
+				ResultsState.difficulty = storyDifficultyText;
+				ResultsState.isStoryMode = false;
+				ResultsState.accuracy = songAccuracy;
+				ResultsState.score = songScore;
+				ResultsState.notesHit = notesHit;
+				ResultsState.rank = rank;
+				FlxG.switchState(new ResultsState());
+			}
+			else
+			{
+				trace('WENT BACK TO FREEPLAY??');
+				FlxG.switchState(new FreeplayState());
+			}
 		}
 	}
 
@@ -2364,6 +2454,7 @@ class PlayState extends MusicBeatState
 		vocals.volume = 1;
 
 		var rating:FlxSprite = new FlxSprite();
+		var ratingMod:Float = 1;
 		var score:Int = 350;
 
 		var daRating:String = "sick";
@@ -2371,16 +2462,19 @@ class PlayState extends MusicBeatState
 		if (noteDiff > Conductor.safeZoneOffset * 0.9)
 		{
 			daRating = 'shit';
+			ratingMod = 0;
 			score = 50;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
+			ratingMod = 0.4;
 			score = 100;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
+			ratingMod = 0.7;
 			score = 200;
 		}
 
@@ -2391,8 +2485,13 @@ class PlayState extends MusicBeatState
 			grpNoteSplashes.add(noteSplash);
 		}
 
-		if (!practiceMode)
+		coolNoteFloat += ratingMod;
+
+		if (!practiceMode) {
+			var scoreIncrease:Float = (score * ((combo + 1) * 0.05));
+			score += Math.floor(scoreIncrease);
 			songScore += score;
+		}
 
 		var ratingPath:String = daRating;
 
@@ -2432,7 +2531,7 @@ class PlayState extends MusicBeatState
 			},
 			startDelay: Conductor.crochet * 0.001
 		});
-		if (combo >= 10 || combo == 0)
+		if (combo >= 10)
 			displayCombo();
 	}
 
@@ -2696,7 +2795,9 @@ class PlayState extends MusicBeatState
 	{
 		health -= 0.04;
 		songMisses++;
+		notesThatHitTheStrum++;
 		killCombo();
+		recalculateAccuracy(true);
 
 		if (!practiceMode)
 			songScore -= 10;
@@ -2723,8 +2824,11 @@ class PlayState extends MusicBeatState
 		{
 			if (!note.isSustainNote)
 			{
+				notesHit++;
+				notesThatHitTheStrum++;
 				combo += 1;
 				popUpScore(note.strumTime, note);
+				recalculateAccuracy(false);
 			}
 
 			if (note.noteData >= 0)
@@ -3030,4 +3134,15 @@ class PlayState extends MusicBeatState
 	}
 
 	var curLight:Int = 0;
+
+	function recalculateAccuracy(miss:Bool = false) {
+		if (miss)
+			coolNoteFloat -= 1;
+	
+		//to make sure we don't divide by 0
+		if (notesThatHitTheStrum == 0)
+			songAccuracy = 100;
+		else
+			songAccuracy = FlxMath.roundDecimal(Math.max(0, coolNoteFloat / notesThatHitTheStrum * 100), 1); //idk how to round to the nearest hundreth so this is all we get...
+	}
 }
