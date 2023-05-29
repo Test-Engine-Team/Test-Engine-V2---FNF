@@ -1,7 +1,5 @@
 package;
 
-import PlayState;
-import Controls;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.text.FlxText;

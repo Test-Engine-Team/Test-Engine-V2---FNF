@@ -2264,25 +2264,6 @@ class PlayState extends MusicBeatState
 			keyShit();
 	}
 
-	/*
-	function playDadStrumAnim(direction:String) {
-		opponentStrums.forEach(function(spr:FlxSprite) {
-			switch (direction) {
-				case 'left':
-					spr.ID = 1;
-				case 'up':
-					spr.ID = 2;
-				case 'down':
-					spr.ID = 3;
-				case 'right':
-					spr.ID = 4;
-			}
-
-			spr.animation.play('confirm', true);
-		});
-	}
-	*/
-
 	function killCombo():Void
 	{
 		if (combo > 5 && gf.animOffsets.exists('sad'))

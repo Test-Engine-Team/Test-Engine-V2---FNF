@@ -120,7 +120,7 @@
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
 	<haxelib name="faxe" if='switch'/>
-	<haxelib name="polymod"/>
+	<haxelib name="scriptless-polymod"/>
 	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
 	
 	<!-- <haxelib name="flixel-animate" /> -->
