@@ -87,10 +87,15 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "v" + Application.current.meta.get('version'), 12);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
+		var fnfVersion:FlxText = new FlxText(5, FlxG.height - 18, 0, "Friday Night Funkin\' v0.2.8", 12);
+		fnfVersion.scrollFactor.set();
+		fnfVersion.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(fnfVersion);
+
+		var teVersion:FlxText = new FlxText(5, FlxG.height - (fnfVersion.y + 18), 0, "Test Engine v" + Application.current.meta.get('version'), 12);
+		teVersion.scrollFactor.set();
+		teVersion.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(teVersion);
 
 		// NG.core.calls.event.logEvent('swag').send();
 

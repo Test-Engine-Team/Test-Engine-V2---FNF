@@ -36,7 +36,7 @@ class ResultsState extends MusicBeatState
         menuBG.scrollFactor.set(0, 0);
         add(menuBG);
 
-        var songNameTxt = new FlxText(0, 40, FlxG.width);
+        var songNameTxt = new FlxText(0, 20, FlxG.width);
         if (!isStoryMode)
             songNameTxt.text = songName + " (" + difficulty + ")";
         else
@@ -51,13 +51,13 @@ class ResultsState extends MusicBeatState
         add(title);
 
         var rankTxt = new FlxText(0, 0, FlxG.width, "Your Rank: " + rank);
-        rankTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
-        rankTxt.y = 120;
+        rankTxt.setFormat(Paths.font("vcr.ttf"), 40, 0xFF000000, "center");
+        rankTxt.y = 130;
         add(rankTxt);
 
         var accuracyTxt = new FlxText(0, 0, FlxG.width, "Accuracy: " + accuracy + "%");
         accuracyTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
-        accuracyTxt.y = rankTxt.y + 40;
+        accuracyTxt.y = rankTxt.y + 50;
         add(accuracyTxt);
 
         var scoreTxt = new FlxText(0, 0, FlxG.width, "Score: " + score);
@@ -65,15 +65,25 @@ class ResultsState extends MusicBeatState
         scoreTxt.y = accuracyTxt.y + 40;
         add(scoreTxt);
 
+        var notesTxt = new FlxText(0, 0, FlxG.width, "Total Notes Hit: " + notesHit);
+        notesTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
+        notesTxt.y = scoreTxt.y + 40;
+        add(notesTxt);
+
+        var comboTxt = new FlxText(0, 0, FlxG.width, "Highest Combo: " + highestCombo);
+        comboTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
+        comboTxt.y = notesTxt.y + 40;
+        add(comboTxt);
+
         var missTxt = new FlxText(0, 0, FlxG.width, "Misses: " + misses);
         missTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
-        missTxt.y = scoreTxt.y + 40;
+        missTxt.y = comboTxt.y + 40;
         add(missTxt);
 
         var leaveTxt = new FlxText(0, 0, FlxG.width, "Press ACCEPT to leave");
         leaveTxt.setFormat(Paths.font("vcr.ttf"), 16, 0xFF000000, "center");
         leaveTxt.alpha = 0.8;
-        leaveTxt.y = missTxt.y + 80;
+        leaveTxt.y = missTxt.y + 60;
         add(leaveTxt);
     }
 

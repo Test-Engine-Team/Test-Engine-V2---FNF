@@ -68,6 +68,7 @@ class PlayState extends MusicBeatState
 
 	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
 	private var playerStrums:FlxTypedGroup<FlxSprite>;
+	private var opponentStrums:FlxTypedGroup<FlxSprite>;
 
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
@@ -835,6 +836,8 @@ class PlayState extends MusicBeatState
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 
+		opponentStrums = new FlxTypedGroup<FlxSprite>();
+
 		generateSong();
 
 		// add(strumLine);
@@ -883,8 +886,9 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 18);
+		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 40, 0, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.scale.set(0.9, 0.9);
 		if (storyWeek == 6) {
 			scoreTxt.font = 'assets/fonts/pixel.otf';
 			scoreTxt.scale.set(0.8, 0.8);
@@ -1725,6 +1729,8 @@ class PlayState extends MusicBeatState
 
 			if (player == 1)
 				playerStrums.add(babyArrow);
+			else if (player == 2)
+				opponentStrums.add(babyArrow);
 
 			babyArrow.animation.play('static');
 			babyArrow.x += 50;
@@ -2197,6 +2203,7 @@ class PlayState extends MusicBeatState
 					{
 						case 0:
 							dad.playAnim('singLEFT' + altAnim, true);
+							//playDadStrumAnim('left');
 							if (!daNote.isSustainNote && !cameraRightSide)
 								camFollow.x -= 60;
 						case 1:
@@ -2256,6 +2263,25 @@ class PlayState extends MusicBeatState
 		if (!inCutscene)
 			keyShit();
 	}
+
+	/*
+	function playDadStrumAnim(direction:String) {
+		opponentStrums.forEach(function(spr:FlxSprite) {
+			switch (direction) {
+				case 'left':
+					spr.ID = 1;
+				case 'up':
+					spr.ID = 2;
+				case 'down':
+					spr.ID = 3;
+				case 'right':
+					spr.ID = 4;
+			}
+
+			spr.animation.play('confirm', true);
+		});
+	}
+	*/
 
 	function killCombo():Void
 	{
@@ -2361,6 +2387,7 @@ class PlayState extends MusicBeatState
 					ResultsState.accuracy = campaignAccuracy;
 					ResultsState.score = campaignScore;
 					ResultsState.notesHit = campaignNotesHit;
+					ResultsState.misses = campaignMisses;
 					ResultsState.rank = campaignRank;
 
 					trace('WENT TO RESULTS STATE??');
@@ -2435,6 +2462,7 @@ class PlayState extends MusicBeatState
 				ResultsState.isStoryMode = false;
 				ResultsState.accuracy = songAccuracy;
 				ResultsState.score = songScore;
+				ResultsState.misses = songMisses;
 				ResultsState.notesHit = notesHit;
 				ResultsState.rank = rank;
 				FlxG.switchState(new ResultsState());
