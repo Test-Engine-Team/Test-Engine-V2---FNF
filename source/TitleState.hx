@@ -374,12 +374,12 @@ class TitleState extends MusicBeatState
 					}
 
 					http.request();
-				});
-			}
-			else
-			{
-				FlxG.switchState(new MainMenuState()); // fail but we go anyway
-			}
+				}
+				else
+				{
+					FlxG.switchState(new MainMenuState()); // fail but we go anyway
+				}
+			});
 		}
 		// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		#end
