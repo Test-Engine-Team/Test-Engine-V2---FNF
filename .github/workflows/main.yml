@@ -86,6 +86,7 @@ jobs:
           haxelib install flixel-ui
           haxelib install flixel-addons
           haxelib git flixel-leather https://github.com/Leather128/flixel.git
+          haxelib git scriptless-polymod https://github.com/SrtHero278/scriptless-polymod
           haxelib git openfl https://github.com/openfl/openfl
           haxelib list
       - name: Create Version Tag

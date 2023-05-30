@@ -345,7 +345,7 @@ class TitleState extends MusicBeatState
 			{
 				// Get current version of Kade Engine
 
-				var http = new haxe.Http("https://raw.githubusercontent.com/Test-Engine-Team/Test-Engine-V2---FNF/master/Version.txt?token=GHSAT0AAAAAAB7Y5VACUESZ2UJOWRE3FEHSZDVCWDA");
+				var http = new haxe.Http("https://raw.githubusercontent.com/Test-Engine-Team/Test-Engine-V2---FNF/master/Version.txt");
 				var returnedData:Array<String> = [];
 				var curVer = Application.current.meta.get('version');
 
