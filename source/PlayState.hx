@@ -888,7 +888,6 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 40, 0, "", 18);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		scoreTxt.scale.set(0.9, 0.9);
 		if (storyWeek == 6) {
 			scoreTxt.font = 'assets/fonts/pixel.otf';
 			scoreTxt.scale.set(0.8, 0.8);

@@ -343,40 +343,51 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				// Get current version of Kade Engine
+				// Get current version of Test Engine
+				if (PreferencesMenu.getPref('check-updates')) {
 
-				var http = new haxe.Http("https://raw.githubusercontent.com/Test-Engine-Team/Test-Engine-V2---FNF/master/Version.txt");
-				var returnedData:Array<String> = [];
-				var curVer = Application.current.meta.get('version');
+					var http = new haxe.Http("https://raw.githubusercontent.com/Test-Engine-Team/Test-Engine-V2---FNF/master/Version.txt");
+					var returnedData:Array<String> = [];
+					var curVer = Application.current.meta.get('version');
 
-				http.onData = function(data:String)
-				{
-					returnedData[0] = data.substring(0, data.indexOf(';'));
-					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-					if (!curVer.contains(returnedData[0].trim()) && !OutdatedState.leftState)
+					http.onData = function(data:String)
 					{
-						trace('L your outdated ' + returnedData[0] + ' != ' + curVer);
-						OutdatedState.newVer = returnedData[0];
-						FlxG.switchState(new OutdatedState());
+						returnedData[0] = data.substring(0, data.indexOf(';'));
+						returnedData[1] = data.substring(data.indexOf('-'), data.length);
+						if (!curVer.contains(returnedData[0].trim()) && !OutdatedState.leftState)
+						{
+							trace('L your outdated ' + returnedData[0] + ' != ' + curVer);
+							OutdatedState.newVer = returnedData[0];
+							FlxG.switchState(new OutdatedState());
+						}
+						else
+						{
+							trace('user is ok :)');
+							FlxG.switchState(new MainMenuState());
+						}
 					}
-					else
+
+					http.onError = function(error)
 					{
-						trace('user is ok :)');
-						FlxG.switchState(new MainMenuState());
+						trace('error: $error');
+						FlxG.switchState(new MainMenuState()); // fail but we go anyway
 					}
-				}
 
-				http.onError = function(error)
-				{
-					trace('error: $error');
-					FlxG.switchState(new MainMenuState()); // fail but we go anyway
-				}
-
-				http.request();
-			});
+					http.request();
+				});
+			}
+			else
+			{
+				FlxG.switchState(new MainMenuState()); // fail but we go anyway
+			}
 		}
 		// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		#end
+
+		if (!pressedEnter && skippedIntro && !transitioning && FlxG.keys.justPressed.FIVE) {
+			OutdatedState.newVer = "1.0.0";
+			FlxG.switchState(new OutdatedState());
+		}
 
 		if (pressedEnter && !skippedIntro && initialized)
 			skipIntro();

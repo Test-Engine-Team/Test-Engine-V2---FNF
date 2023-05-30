@@ -31,12 +31,13 @@ class PreferencesMenu extends ui.OptionsState.Page
 		add(items = new TextMenuList());
 
 		createPrefItem('Ghost Tapping', 'gt', true);
-		createPrefItem('naughtyness', 'censor-naughty', true);
-		createPrefItem('downscroll', 'downscroll', false);
+		createPrefItem('Naughtyness', 'censor-naughty', true);
+		createPrefItem('Downscroll', 'downscroll', false);
 		createPrefItem('Flashing Lights', 'flashing-menu', true);
 		createPrefItem('Freeplay Cutscenes', 'freeplay-cutscenes', false);
 		createPrefItem('Camera Zooming on Beat', 'camera-zoom', true);
 		createPrefItem('Botplay', 'bot', false);
+		createPrefItem('Check for Updates', 'update-check', true);
 		createPrefItem('FPS Counter', 'fps-counter', true);
 		createPrefItem('Auto Pause', 'auto-pause', false);
 		createPrefItem('OG UI', 'old', false);
@@ -80,6 +81,7 @@ class PreferencesMenu extends ui.OptionsState.Page
 		preferenceCheck('freeplay-cutscenes', false);
 		preferenceCheck('camera-zoom', true);
 		preferenceCheck('bot', false);
+		preferenceCheck('update-checker', true);
 		preferenceCheck('fps-counter', true);
 		preferenceCheck('auto-pause', false);
 		preferenceCheck('old', false);

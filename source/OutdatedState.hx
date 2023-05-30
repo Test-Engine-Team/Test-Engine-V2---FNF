@@ -32,11 +32,11 @@ class OutdatedState extends MusicBeatState
         outdatedTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
         add(outdatedTxt);
 
-        var updateTxt = new FlxText(-40, outdatedTxt.y + 200, FlxG.width, "Press Enter to Update");
+        var updateTxt = new FlxText(-100, FlxG.height - 200, FlxG.width, "Press Enter to Update");
         updateTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
         add(updateTxt);
 
-        var leaveTxt = new FlxText(40, outdatedTxt.y + 200, FlxG.width, "Press Escape to Ignore");
+        var leaveTxt = new FlxText(100, FlxG.height - 200, FlxG.width, "Press Escape to Ignore");
         leaveTxt.setFormat(Paths.font("vcr.ttf"), 32, 0xFF000000, "center");
         add(leaveTxt);
     }
