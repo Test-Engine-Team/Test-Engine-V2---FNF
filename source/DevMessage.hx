@@ -2,6 +2,7 @@ package;
 
 import flixel.text.FlxText;
 import flixel.FlxG;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -20,7 +21,7 @@ class DevMessage extends MusicBeatState {
         \nAnd that anyone who tries to revive the legacy of this engine, rots.\nI'm sorry Mackery, Brandon and Megalo. -MemeHoovy
         \nPS: No this isn't a fucking suicide note, even if I made it seem like one, and sorry for that vid I sent in the old server.
         \nI already left it.
-        "
+        ";
         message.screenCenter();
         message.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
         add(message);
