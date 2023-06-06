@@ -21,11 +21,7 @@ class MainMenuState extends MusicBeatState
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
-	#if !switch
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'options'];
-	#else
-	var optionShit:Array<String> = ['story mode', 'freeplay'];
-	#end
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -97,6 +93,12 @@ class MainMenuState extends MusicBeatState
 		teVersion.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(teVersion);
 
+		var message:FlxText = new FlxText(5, FlxG.height - 36, 0, "Press 7", 12);
+		message.scrollFactor.set();
+		message.screenCenter(X);
+		message.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(message);
+
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
@@ -134,6 +136,10 @@ class MainMenuState extends MusicBeatState
 			if (controls.BACK)
 			{
 				FlxG.switchState(new TitleState());
+			}
+
+			if (FlxG.keys.justPressed.SEVEN){
+				FlxG.switchState(new DevMessage());
 			}
 
 			if (controls.ACCEPT)
