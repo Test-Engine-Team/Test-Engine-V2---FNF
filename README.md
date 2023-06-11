@@ -1,3 +1,16 @@
+# A send off to Test Engine
+I wasn't sure where to put this, so README will do. This is a final send off to Test Engine. There won't be anymore re-runs or new versions. Test Engine is cancelled.
+I would like to thank everyone who's been here throughout it's 7 month lifespan, I know development has been on and off, and very rocky at that. But after a team decision, we decided it's best to let it go, and focus our priorities on Funkin' Revised.
+Development of the engine has been fun, but there have always been issues, such as a former team member and an executive having issues with each other. (More detail in the discord server, also being shut down soon.) 
+I hope to see Revised become what we had hoped Test would've been.
+
+Goodbye, Test Engine. It's been a pleasure working on this mod.
+Former project leader and coder,
+Megalo
+
+This mod will be archived and made read only today at 3:00PM GMT (+0100)
+
+
 # Test Engine
 ![Logo](https://github.com/Test-Engine-Team/Test-Engine-V1---FNF/blob/4d8b0e2ed659ea8ac0e4c30b93332ca400f8efce/art/logo.png)
 
